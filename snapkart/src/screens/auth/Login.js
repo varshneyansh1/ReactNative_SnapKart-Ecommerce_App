@@ -1,18 +1,17 @@
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   Image,
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import InputBox from '../../components/Form/InputBox';
 
 //redux hooks
 import {login} from '../../redux/features/auth/userActions';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {useReduxStatehook} from '../../hooks/customHook';
 
 const Login = ({navigation}) => {

@@ -1,21 +1,23 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import React from 'react';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import {addProductToCart} from '../../redux/features/order/orderActions';
+import {useDispatch} from 'react-redux';
 
-const ProductsCard = ({ p }) => {
+const ProductsCard = ({p}) => {
   const navigation = useNavigation();
 
-  const handleMoreButton = (id) => {
-    navigation.navigate('productDetails', { _id: id });
+  const handleMoreButton = id => {
+    navigation.navigate('productDetails', {_id: id});
   };
-
-  const handleAddToCart = () => {
-    alert('Added to cart');
+  const dispatch = useDispatch();
+  const handleAddToCart = product => {
+    dispatch(addProductToCart(product));
   };
 
   return (
     <View style={styles.card}>
-      <Image style={styles.cardImage} source={{ uri: p?.images[0].url }} />
+      <Image style={styles.cardImage} source={{uri: p?.images[0].url}} />
       <Text style={styles.cardTitle}>{p?.name}</Text>
       <Text style={styles.cardDesc}>
         {p?.description.substring(0, 30)} ...more
@@ -26,7 +28,9 @@ const ProductsCard = ({ p }) => {
           onPress={() => handleMoreButton(p?._id)}>
           <Text style={styles.btnText}>Details</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.btnCart} onPress={handleAddToCart}>
+        <TouchableOpacity
+          style={styles.btnCart}
+          onPress={() => handleAddToCart(p)}>
           <Text style={styles.btnText}>ADD TO CART</Text>
         </TouchableOpacity>
       </View>
@@ -42,7 +46,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     justifyContent: 'center',
     alignItems: 'center',
-    height:250
+    height: 250,
   },
   cardImage: {
     height: 80,
