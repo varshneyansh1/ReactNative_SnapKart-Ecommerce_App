@@ -96,6 +96,7 @@ export const createProductController = async (req, res) => {
     //     message: "Please Provide all fields",
     //   });
     // }
+    console.log(req);
     if (!req.file) {
       return res.status(500).send({
         success: false,
@@ -245,7 +246,7 @@ export const deleteProductImageController = async (req, res) => {
         message: "product image not found",
       });
     }
-     
+
     let isExist = -1;
     product.images.forEach((item, index) => {
       if (item._id.toString() === id.toString()) isExist = index;

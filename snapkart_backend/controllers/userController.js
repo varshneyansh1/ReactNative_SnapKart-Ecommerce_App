@@ -114,14 +114,14 @@ export const getUserProfileController = async (req, res) => {
     user.password = undefined;
     res.status(200).send({
       success: true,
-      message: "USer Prfolie Fetched Successfully",
+      message: "USer Profile Fetched Successfully",
       user,
     });
   } catch (error) {
     console.log(error);
     res.status(500).send({
       success: false,
-      message: "Error In PRofile API",
+      message: "Error In Profile API",
       error,
     });
   }

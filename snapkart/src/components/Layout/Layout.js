@@ -6,26 +6,33 @@ const Layout = ({children}) => {
   return (
     <>
       <StatusBar />
-      <View>{children}</View>
-      <View style={styles.footer}>
-        <Footer />
+      <View style={styles.container}>
+        <View style={styles.content}>
+          {children}
+        </View>
+        <View style={styles.footer}>
+          <Footer />
+        </View>
       </View>
     </>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1, // Take full height of the screen
+  },
+  content: {
+    flex: 1, // Take up remaining space above the footer
+  },
   footer: {
-    display: 'flex',
     width: '100%',
-    flex: 1,
     justifyContent: 'flex-end',
-    zIndex: 100,
     borderTopWidth: 1,
     borderColor: 'lightgray',
-    position: 'absolute',
-    bottom: 0,
     padding: 10,
+    backgroundColor: '#fff', // Ensure footer has a background color to avoid transparency issues
   },
 });
+
 export default Layout;

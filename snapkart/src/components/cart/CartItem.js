@@ -23,7 +23,7 @@ const Cartitem = ({ item }) => {
         <TouchableOpacity style={styles.btnQty} onPress={handleRemoveQty}>
           <Text style={styles.btnQtyText}>-</Text>
         </TouchableOpacity>
-        <Text>{qty}</Text>
+        <Text style={{color: 'black'}}>{qty}</Text>
         <TouchableOpacity style={styles.btnQty} onPress={handleAddQty}>
           <Text style={styles.btnQtyText}>+</Text>
         </TouchableOpacity>
@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 10,
+    color:"black"
   },
   btnContainer: {
     flexDirection: "row",
@@ -63,6 +64,7 @@ const styles = StyleSheet.create({
   },
   btnQtyText: {
     fontSize: 20,
+    color:"black"
   },
 });
 export default Cartitem;

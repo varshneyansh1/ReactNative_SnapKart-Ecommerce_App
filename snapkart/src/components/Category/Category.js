@@ -47,8 +47,10 @@ const styles = StyleSheet.create({
   catIcon: {
     fontSize: 28,
     verticalAlign: 'top',
+    color:"black"
   },
   catTitle: {
     fontSize: 12,
+    color:"black"
   },
 });

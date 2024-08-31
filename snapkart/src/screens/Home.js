@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect} from 'react';
 import Layout from '../components/Layout/Layout';
 import Categories from '../components/Category/Category';
@@ -17,12 +17,11 @@ const Home = () => {
   return (
     <Layout>
       <Header />
+      <ScrollView>
       <Categories />
       <Banner />
       <Products />
-      <View>
-        <Text>Home</Text>
-      </View>
+      </ScrollView>
     </Layout>
   );
 };

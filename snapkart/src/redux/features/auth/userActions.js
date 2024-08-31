@@ -35,15 +35,11 @@ export const register = formData => async dispatch => {
       type: 'registerRequest',
     });
     // hit register api
-    console.log("hello");
     const data = await axios.post(`${server}/user/register`, formData, {
       headers: {
         'Content-Type': 'application/json',
       },
     });
-    console.log(data);
-    
-
     dispatch({
       type: 'registerSucess',
       payload: data.message,

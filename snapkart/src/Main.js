@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Home from './screens/Home';
-import About from './screens/About';
 import ProductDetails from './screens/ProductDetails';
 import Cart from './screens/Cart';
 import {NavigationContainer} from '@react-navigation/native';
@@ -35,11 +34,6 @@ const Main = () => {
           options={{headerShown: false}}
         />
 
-        <Stack.Screen
-          name="mobile"
-          component={About}
-          options={{headerShown: false}}
-        />
         <Stack.Screen
           name="cart"
           component={Cart}

@@ -1,20 +1,28 @@
 import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Layout from '../components/Layout/Layout';
-import {ProductsData} from '../data/ProductData';
+import {useDispatch, useSelector} from 'react-redux';
+import {getSingleProductData} from '../redux/features/product/productActions';
 
 const ProductDetails = ({route}) => {
+  const {params} = route;
+
   const [pDetails, setPDetails] = useState({});
   const [qty, setQty] = useState(1);
-  // get product dfetails
+
+  const {productDetail} = useSelector(state => state.product);
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    //find product details
-    const getProudct = ProductsData.find(p => {
-      return p?._id === params?._id;
-    });
-    setPDetails(getProudct);
-  }, [params?._id]);
-  // console.log(route);
+    if (params?._id) {
+      dispatch(getSingleProductData(params._id));
+    }
+  }, [dispatch, params?._id]);
+
+  useEffect(() => {
+    setPDetails(productDetail);
+  }, [productDetail]);
+
   // Handle function for + -
   const handleAddQty = () => {
     if (qty === 10) return alert('you cant add more than 10 quantity');
@@ -24,28 +32,33 @@ const ProductDetails = ({route}) => {
     if (qty <= 1) return;
     setQty(prev => prev - 1);
   };
-  const {params} = route;
+
   return (
     <Layout>
-      <Image source={{uri: pDetails?.imageUrl}} style={styles.image} />
+      <View style={styles.imgContainer}>
+        {pDetails?.images && pDetails.images.length > 0 && (
+          <Image source={{uri: pDetails.images[0].url}} style={styles.image} />
+        )}
+      </View>
+
       <View style={styles.container}>
         <Text style={styles.title}>{pDetails?.name}</Text>
         <Text style={styles.title}>Price : Rs. {pDetails?.price}</Text>
-        <Text style={styles.desc}>Details : {pDetails?.description} $</Text>
+        <Text style={styles.desc}>Details : {pDetails?.description} Rs. </Text>
         <View style={styles.btnContainer}>
           <TouchableOpacity
             style={styles.btnCart}
             onPress={() => alert(`${qty} items added to cart`)}
-            disabled={pDetails?.quantity <= 0}>
+            disabled={pDetails?.stock <= 0}>
             <Text style={styles.btnCartText}>
-              {pDetails?.quantity > 0 ? 'ADD TO CART' : 'OUT OF STOCK'}
+              {pDetails?.stock > 0 ? 'ADD TO CART' : 'OUT OF STOCK'}
             </Text>
           </TouchableOpacity>
           <View style={styles.btnContainer}>
             <TouchableOpacity style={styles.btnQty} onPress={handleRemoveQty}>
               <Text style={styles.btnQtyText}>-</Text>
             </TouchableOpacity>
-            <Text>{qty}</Text>
+            <Text style={{color: 'black'}}>{qty}</Text>
             <TouchableOpacity style={styles.btnQty} onPress={handleAddQty}>
               <Text style={styles.btnQtyText}>+</Text>
             </TouchableOpacity>
@@ -56,23 +69,35 @@ const ProductDetails = ({route}) => {
   );
 };
 const styles = StyleSheet.create({
+  imgContainer: {
+    backgroundColor: 'white',
+    margin: 20,
+    height: '30%',
+    width: '90%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   image: {
-    height: 300,
-    width: '100%',
+    height: 200,
+    width: 250,
+    objectFit: 'contain',
   },
   container: {
     marginVertical: 15,
-    marginHorizontal: 10,
+    marginHorizontal: 22,
+    
   },
   title: {
     fontSize: 18,
     textAlign: 'left',
+    color: 'black',
   },
   desc: {
     fontSize: 12,
     textTransform: 'capitalize',
     textAlign: 'justify',
     marginVertical: 10,
+    color: 'black',
   },
   btnContainer: {
     flexDirection: 'row',
@@ -103,6 +128,7 @@ const styles = StyleSheet.create({
   },
   btnQtyText: {
     fontSize: 20,
+    color: 'black',
   },
 });
 export default ProductDetails;

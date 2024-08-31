@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   active: {
-    color: 'blue',
+    color: '#ccae62',
   },
 });
 export default Footer;
