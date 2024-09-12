@@ -1,6 +1,6 @@
 import express from "express";
 import {
-    getUserProfileController,
+  getUserProfileController,
   loginController,
   logoutController,
   passwordResetController,
@@ -11,7 +11,7 @@ import {
 } from "../controllers/userController.js";
 import { isAuth } from "../middlewares/authMiddleware.js";
 import { singleUpload } from "../middlewares/multer.js";
-import {rateLimit} from "express-rate-limit"
+import { rateLimit } from "express-rate-limit";
 // RATE LIMITER
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -25,15 +25,15 @@ const router = express.Router();
 
 // routes
 // register
-router.post("/register",limiter, registerController);
+router.post("/register", limiter, registerController);
 //login
-router.post("/login",limiter, loginController);
+router.post("/login", limiter, loginController);
 //profile
-router.get("/profile",isAuth,getUserProfileController)
+router.get("/profile", isAuth, getUserProfileController);
 //logout
-router.get("/logout",isAuth,logoutController)
+router.get("/logout", isAuth, logoutController);
 //update profile
-router.put("/profile-update",isAuth,updateProfileController)
+router.put("/profile-update", isAuth, updateProfileController);
 // updte password
 router.put("/update-password", isAuth, udpatePasswordController);
 
@@ -41,5 +41,5 @@ router.put("/update-password", isAuth, udpatePasswordController);
 router.put("/update-picture", isAuth, singleUpload, updateProfilePicController);
 
 //  FORGOT PASSWORD
- router.post("/reset-password", passwordResetController);
+router.post("/reset-password", passwordResetController);
 export default router;

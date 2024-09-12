@@ -13,7 +13,7 @@ const router = express.Router();
 // ============== CAT ROUTES ==================
 
 // CREATE CATEGORY
-router.post("/create", isAuth, isAdmin, createCategory);
+router.post("/create", createCategory);
 
 // GET ALL CATEGORY
 router.get("/get-all", getAllCategoriesController);

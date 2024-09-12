@@ -16,5 +16,6 @@ export default configureStore({
 });
 
 // host
-export const server = 'https://reactnative-snapkart-ecommerce-app.onrender.com/api/v1';
-// export const server = 'http://10.21.0.172:8080/api/v1';
+// export const server = 'https://reactnative-snapkart-ecommerce-app.onrender.com/api/v1';
+ export const server = 'http://10.21.0.172:8080/api/v1';
+// export const server = 'http://192.168.137.244:8080/api/v1';

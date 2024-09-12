@@ -13,6 +13,9 @@ import Notifications from './screens/Account/Notifications';
 import MyOrders from './screens/Account/MyOrders';
 import Dashboard from './screens/Admin/Dashboard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import PaymentPage from './screens/PaymentPage';
+import CatProducts from './components/Products/CatProduct.js';
+import OrderDetails from './screens/Account/OrderDetails.js';
 
 const Stack = createNativeStackNavigator();
 const Main = () => {
@@ -50,6 +53,11 @@ const Main = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
+          name="orderDetails"
+          component={OrderDetails}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
           name="notifications"
           component={Notifications}
           options={{headerShown: false}}
@@ -60,8 +68,8 @@ const Main = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="payment"
-          component={Payments}
+          name="paymentpage"
+          component={PaymentPage}
           options={{headerShown: false}}
         />
         <Stack.Screen
@@ -72,6 +80,11 @@ const Main = () => {
         <Stack.Screen
           name="productDetails"
           component={ProductDetails}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="catProducts"
+          component={CatProducts}
           options={{headerShown: false}}
         />
 

@@ -3,6 +3,7 @@ import {server} from '../../store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export const login = (email, password) => async dispatch => {
   try {
+    console.log(email, password);
     dispatch({
       type: 'loginRequest',
     });
@@ -16,6 +17,7 @@ export const login = (email, password) => async dispatch => {
         },
       },
     );
+    console.log('login data', data);
     dispatch({
       type: 'loginSuccess',
       payload: data,
@@ -59,8 +61,18 @@ export const getUserData = () => async dispatch => {
     dispatch({
       type: 'getUserDataRequest',
     });
-    // hitting node get user profile req
-    const {data} = await axios.get(`${server}/user/profile`);
+
+    // Retrieve the token from AsyncStorage
+    const token = await AsyncStorage.getItem('@auth');
+
+    // Send the token in the Authorization header
+    const {data} = await axios.get(`${server}/user/profile`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
     dispatch({
       type: 'getUserDataSuccess',
       payload: data?.user,
@@ -68,26 +80,31 @@ export const getUserData = () => async dispatch => {
   } catch (error) {
     dispatch({
       type: 'getUserDataFail',
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || error.message,
     });
   }
 };
-// logout
-export const logout = () => async dispatch => {
+
+export const logout = () => async (dispatch) => {
   try {
-    dispatch({
-      type: 'logoutRequest',
+    dispatch({ type: 'logoutRequest' });
+
+    const token = await AsyncStorage.getItem('@auth'); // Get token from storage
+    const { data } = await axios.get(`${server}/user/logout`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
-    // hitting node get user profile req
-    const {data} = await axios.get(`${server}/user/logout`);
     dispatch({
       type: 'logoutSuccess',
-      payload: data?.message,
+      payload: data.message,
     });
+
   } catch (error) {
     dispatch({
       type: 'logoutFail',
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || 'Logout failed',
     });
   }
 };
+

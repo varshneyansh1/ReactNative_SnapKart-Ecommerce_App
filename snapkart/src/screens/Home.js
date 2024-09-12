@@ -10,9 +10,11 @@ import {getUserData} from '../redux/features/auth/userActions';
 
 const Home = () => {
   const dispatch = useDispatch();
-  const {user} = useSelector(state => state.user);
+  const {user,error} = useSelector(state => state.user);
+  console.log(error)
   useEffect(() => {
     dispatch(getUserData());
+    
   }, [dispatch]);
   return (
     <Layout>

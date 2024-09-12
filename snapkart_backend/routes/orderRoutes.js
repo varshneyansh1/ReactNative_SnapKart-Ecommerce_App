@@ -4,7 +4,7 @@ import {
   changeOrderStatusController,
   createOrderController,
   getAllOrdersController,
-  getMyOrdersCotroller,
+  getMyOrdersController,
   paymetsController,
   singleOrderDetrailsController,
 } from "../controllers/orderController.js";
@@ -15,16 +15,16 @@ const router = express.Router();
 // ============== ORDERS ROUTES ==================
 
 // CREATE ORDERS
-router.post("/create", isAuth, createOrderController);
+router.post("/create", isAuth,createOrderController);
 
 //  GET ALL ORDERS
-router.get("/my-orders", isAuth, getMyOrdersCotroller);
+router.get("/my-orders",isAuth,getMyOrdersController);
 
 //  GET SINGLE ORDER DETAILS
-router.get("/my-orders/:id", isAuth, singleOrderDetrailsController);
+router.get("/my-orders/:id",isAuth, singleOrderDetrailsController);
 
 // acceipt payments
-router.post("/payments", isAuth, paymetsController);
+router.post("/payments",isAuth, paymetsController);
 
 /// ======== ADMIN PART ============
 // get all order

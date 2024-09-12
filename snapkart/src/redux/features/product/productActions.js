@@ -41,3 +41,41 @@ export const getSingleProductData = (id) => async dispatch => {
       });
     }
   };
+// Get products by category
+export const getProductsByCategory = (categoryName) => async dispatch => {
+  try {
+    dispatch({
+      type: 'getProductsByCategoryRequest',
+    });
+
+    const {data} = await axios.get(`${server}/product/category/${categoryName}`);
+    dispatch({
+      type: 'getProductsByCategorySuccess',
+      payload: data?.products,
+    });
+  } catch (error) {
+    dispatch({
+      type: 'getProductsByCategoryFail',
+      payload: error.response.data.message,
+    });
+  }
+};  
+
+
+// Action to search products by name
+// export const searchProducts = (searchKey) => async (dispatch) => {
+//   try {
+//     dispatch({ type: 'searchProductsRequest' });
+
+//     const { data } = await axios.get(`${server}/product/search/${searchKey}`);
+//     dispatch({
+//       type: 'searchProductsSuccess',
+//       payload: data,
+//     });
+//   } catch (error) {
+//     dispatch({
+//       type: 'searchProductsFail',
+//       payload: error.response.data.message,
+//     });
+//   }
+// };

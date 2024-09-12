@@ -3,12 +3,13 @@ import React, {useEffect, useState} from 'react';
 import Layout from '../components/Layout/Layout';
 import {useDispatch, useSelector} from 'react-redux';
 import {getSingleProductData} from '../redux/features/product/productActions';
+import {addProductToCart} from '../redux/features/order/orderActions';
+import {useNavigation} from '@react-navigation/native';
 
 const ProductDetails = ({route}) => {
   const {params} = route;
-
+  const navigation = useNavigation();
   const [pDetails, setPDetails] = useState({});
-  const [qty, setQty] = useState(1);
 
   const {productDetail} = useSelector(state => state.product);
   const dispatch = useDispatch();
@@ -22,17 +23,10 @@ const ProductDetails = ({route}) => {
   useEffect(() => {
     setPDetails(productDetail);
   }, [productDetail]);
-
-  // Handle function for + -
-  const handleAddQty = () => {
-    if (qty === 10) return alert('you cant add more than 10 quantity');
-    setQty(prev => prev + 1);
+  const handleAddToCart = product => {
+    dispatch(addProductToCart(product));
+    navigation.navigate('cart');
   };
-  const handleRemoveQty = () => {
-    if (qty <= 1) return;
-    setQty(prev => prev - 1);
-  };
-
   return (
     <Layout>
       <View style={styles.imgContainer}>
@@ -48,21 +42,12 @@ const ProductDetails = ({route}) => {
         <View style={styles.btnContainer}>
           <TouchableOpacity
             style={styles.btnCart}
-            onPress={() => alert(`${qty} items added to cart`)}
+            onPress={() => handleAddToCart(pDetails)}
             disabled={pDetails?.stock <= 0}>
             <Text style={styles.btnCartText}>
               {pDetails?.stock > 0 ? 'ADD TO CART' : 'OUT OF STOCK'}
             </Text>
           </TouchableOpacity>
-          <View style={styles.btnContainer}>
-            <TouchableOpacity style={styles.btnQty} onPress={handleRemoveQty}>
-              <Text style={styles.btnQtyText}>-</Text>
-            </TouchableOpacity>
-            <Text style={{color: 'black'}}>{qty}</Text>
-            <TouchableOpacity style={styles.btnQty} onPress={handleAddQty}>
-              <Text style={styles.btnQtyText}>+</Text>
-            </TouchableOpacity>
-          </View>
         </View>
       </View>
     </Layout>
@@ -85,7 +70,6 @@ const styles = StyleSheet.create({
   container: {
     marginVertical: 15,
     marginHorizontal: 22,
-    
   },
   title: {
     fontSize: 18,
@@ -107,7 +91,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   btnCart: {
-    width: 180,
+    width: 300,
     backgroundColor: '#000000',
     // marginVertical: 10,
     borderRadius: 5,

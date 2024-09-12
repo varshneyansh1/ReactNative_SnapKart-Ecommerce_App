@@ -23,16 +23,4 @@ export const categoriesData = [
     path: 'tablet',
     icon: 'tablet',
   },
-  {
-    _id: 5,
-    name: 'Headphones',
-    path: 'headphones',
-    icon: 'headphones',
-  },
-  {
-    _id: 6,
-    name: 'Accessories',
-    path: 'accessories',
-    icon: 'list',
-  },
 ];

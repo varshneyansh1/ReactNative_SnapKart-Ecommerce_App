@@ -1,17 +1,35 @@
 import JWT from "jsonwebtoken";
 import userModel from "../models/userModel.js";
 export const isAuth = async (req, res, next) => {
-  const { token } = req.cookies;
-  // validation
-  if (!token) {
+  // Extract token from Authorization header
+  const authHeader = req.headers.authorization;
+
+  // Check if the Authorization header is present
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).send({
       success: false,
-      message: "unauthorized user",
+      message: "Unauthorized user",
     });
   }
-  const decodeData = JWT.verify(token, process.env.JWT_SECRET);
-  req.user = await userModel.findById(decodeData._id);
-  next();
+
+  // Extract the token (after 'Bearer ')
+  const token = authHeader.split(' ')[1];
+
+  try {
+    // Validate the token
+    const decodeData = JWT.verify(token, process.env.JWT_SECRET);
+
+    // Attach user to request
+    req.user = await userModel.findById(decodeData._id);
+    
+    // Proceed to the next middleware or route
+    next();
+  } catch (error) {
+    return res.status(401).send({
+      success: false,
+      message: "Invalid or expired token",
+    });
+  }
 };
 // ADMIN AUTH
 export const isAdmin = async (req, res, next) => {

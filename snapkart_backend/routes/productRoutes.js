@@ -5,9 +5,11 @@ import {
   deleteProductController,
   deleteProductImageController,
   getAllProductsController,
+  getProductsByCategoryController,
   getSingleProductController,
   getTopProductsController,
   productReviewController,
+  searchProductsController,
   updateProductController,
   updateProductImageController,
 } from "../controllers/productController.js";
@@ -20,15 +22,19 @@ const router = express.Router();
 
 // GET ALL PRODUCTS
 router.get("/get-all", getAllProductsController);
+// GET ALL PRODUCTS From given category
+router.get("/category/:categoryName", getProductsByCategoryController);
 
 // GET TOP PRODUCTS
 router.get("/top", getTopProductsController);
 
 // GET SINGLE PRODUCTS
 router.get("/:id", getSingleProductController);
+// search product 
+router.get('/search/:key', searchProductsController);
 
 // CREATE PRODUCT
-router.post("/create", isAuth, isAdmin, singleUpload, createProductController);
+router.post("/create", singleUpload, createProductController);
 
 // UPDATE PRODUCT
 router.put("/:id", isAuth, isAdmin, updateProductController);

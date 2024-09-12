@@ -13,20 +13,32 @@ import {useDispatch, useSelector} from 'react-redux';
 import {getCartData} from '../redux/features/order/orderActions';
 
 const Cart = ({navigation}) => {
+  
+
   const {cartItems} = useSelector(state => state.order);
   const dispatch = useDispatch();
-
-  // const [cartItems, setCartItems] = useState(null);
 
   useEffect(() => {
     dispatch(getCartData());
   }, [dispatch]);
+
+  // Calculate the total price of all items in the cart
+  const totalPrice = cartItems?.reduce((sum, item) => {
+    return sum + item.price * item.userQuantity;
+  }, 0);
+  // calculate total quantity of all items in the cart
+  const totalqty = cartItems?.reduce((sum, item) => {
+    return sum + item.userQuantity;
+  }, 0);
+
   return (
     <Layout>
       <Text style={styles.heading}>
         {cartItems?.length > 0
-          ? `You Have ${cartItems?.length} Item Left In Your Cart`
-          : 'OOPS Your Cart Is EMPTY !'}
+          ? `You Have ${totalqty} Item${
+              cartItems.length > 1 ? 's' : ''
+            } Left In Your Cart`
+          : 'OOPS Your Cart Is EMPTY!'}
       </Text>
       {cartItems?.length > 0 && (
         <>
@@ -36,11 +48,11 @@ const Cart = ({navigation}) => {
             ))}
           </ScrollView>
           <View>
-            <PriceTable title={'Price'} price={999} />
-            <PriceTable title={'Tax'} price={1} />
+            <PriceTable title={'Price'} price={totalPrice} />
+            <PriceTable title={'Tax'} price={0.18*totalPrice} />
             <PriceTable title={'Shipping'} price={99} />
             <View style={styles.grandTotal}>
-              <PriceTable title={'Grand Total'} price={1001} />
+              <PriceTable title={'Grand Total'} price={totalPrice + 0.18*totalPrice + 99} />
             </View>
             <TouchableOpacity
               style={styles.btnCheckout}
@@ -53,6 +65,7 @@ const Cart = ({navigation}) => {
     </Layout>
   );
 };
+
 const styles = StyleSheet.create({
   heading: {
     textAlign: 'center',
@@ -65,7 +78,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     padding: 5,
     margin: 5,
-    marginHorizontal: 20,
+    justifyContent:"space-evenly"
+    
   },
   btnCheckout: {
     marginTop: 20,
@@ -83,4 +97,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
+
 export default Cart;

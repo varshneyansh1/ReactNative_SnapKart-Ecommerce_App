@@ -51,32 +51,45 @@ export const createOrderController = async (req, res) => {
 };
 
 // GET ALL ORDERS - MY ORDERS
-export const getMyOrdersCotroller = async (req, res) => {
+export const getMyOrdersController = async (req, res) => {
   try {
-    // find orders
-    const orders = await orderModel.find({ user: req.user._id });
-    //valdiation
-    if (!orders) {
-      return res.status(404).send({
+    // Ensure user ID is available
+    if (!req.user || !req.user._id) {
+      return res.status(400).send({
         success: false,
-        message: "no orders found",
+        message: "User ID not provided in the request.",
       });
     }
+
+    // Find orders for the user
+    const orders = await orderModel.find({ user: req.user._id });
+
+    // If no orders found for the user
+    if (orders.length === 0) {
+      return res.status(404).send({
+        success: false,
+        message: "No orders found for this user.",
+      });
+    }
+
+    // If orders are found
     res.status(200).send({
       success: true,
-      message: "your orders data",
+      message: "Your orders data",
       totalOrder: orders.length,
       orders,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error in My Orders API:", error.message || error);
+
     res.status(500).send({
       success: false,
-      message: "Error In My orders Order API",
-      error,
+      message: "Internal Server Error. Could not retrieve orders.",
+      error: error.message || error,
     });
   }
 };
+
 
 // GET SINGLE ORDER INFO
 export const singleOrderDetrailsController = async (req, res) => {
@@ -113,34 +126,40 @@ export const singleOrderDetrailsController = async (req, res) => {
 };
 
 // ACCEPT PAYMENTS
+// Backend: Payments Controller
 export const paymetsController = async (req, res) => {
   try {
-    // get ampunt
     const { totalAmount } = req.body;
-    // validation
+
+    // Validation
     if (!totalAmount) {
-      return res.status(404).send({
+      return res.status(400).send({
         success: false,
-        message: "Total Amount is require",
+        message: "Total Amount is required",
       });
     }
-    const { client_secret } = await stripe.paymentIntents.create({
-      amount: Number(totalAmount * 100),
+
+    // Create Stripe Payment Intent
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: Math.round(totalAmount * 100),  // Convert to smallest currency unit
       currency: "inr",
+      payment_method_types: ["card"],
     });
+
     res.status(200).send({
       success: true,
-      client_secret,
+      client_secret: paymentIntent.client_secret,  // Send back the client secret
     });
   } catch (error) {
-    console.log(error);
+    console.log('Error in Payment API:', error);
     res.status(500).send({
       success: false,
-      message: "Error In Get UPDATE Products API",
+      message: "Error In Payment API",
       error,
     });
   }
 };
+
 
 // ========== ADMIN SECTION =============
 

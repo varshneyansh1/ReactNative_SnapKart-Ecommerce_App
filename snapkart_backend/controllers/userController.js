@@ -57,6 +57,7 @@ export const registerController = async (req, res) => {
 
 export const loginController = async (req, res) => {
   try {
+   
     const { email, password } = req.body;
     //validation
     if (!email || !password) {
@@ -76,6 +77,7 @@ export const loginController = async (req, res) => {
     }
     //check password
     const isMatch = await user.comparePassword(password);
+    console.log(isMatch)
     if (!isMatch) {
       return res.status(500).send({
         success: false,
@@ -83,13 +85,14 @@ export const loginController = async (req, res) => {
       });
     }
     const token = user.generateToken();
+   
     res
       .status(200)
       .cookie("token", token, {
         expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
-        secure: process.env.NODE_ENV === "development" ? true : false,
-        httpOnly: process.env.NODE_ENV === "development" ? true : false,
-        sameSite: process.env.NODE_ENV === "development" ? true : false,
+        secure: process.env.NODE_ENV === "production" ? true : false,
+        httpOnly: process.env.NODE_ENV === "production" ? true : false,
+        sameSite: process.env.NODE_ENV === "production" ? true : false,
       })
       .send({
         success: true,
@@ -133,24 +136,25 @@ export const logoutController = async (req, res) => {
     res
       .status(200)
       .cookie("token", "", {
-        expires: new Date(Date.now()),
-        secure: process.env.NODE_ENV === "development" ? true : false,
-        httpOnly: process.env.NODE_ENV === "development" ? true : false,
-        sameSite: process.env.NODE_ENV === "development" ? true : false,
+        expires: new Date(Date.now()), // Immediately expire the cookie
+        secure: process.env.NODE_ENV === "production", // Secure in production
+        httpOnly: process.env.NODE_ENV === "production", // HttpOnly in production
+        sameSite: process.env.NODE_ENV === "production" ? 'Strict' : 'Lax', // Lax in development
       })
       .send({
         success: true,
-        message: "Logout SUccessfully",
+        message: "Logout Successfully",
       });
   } catch (error) {
     console.log(error);
     res.status(500).send({
       success: false,
-      message: "Error In Logout API",
+      message: "Error in Logout API",
       error,
     });
   }
 };
+
 
 // UPDATE USER PROFILE
 export const updateProfileController = async (req, res) => {
