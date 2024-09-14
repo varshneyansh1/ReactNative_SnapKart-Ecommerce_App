@@ -34,21 +34,27 @@ const userSchema = new mongoose.Schema(
       required: [true, "phone no is required"],
     },
     profilePic: {
-      public_id:{
-        type:String,
+      public_id: {
+        type: String,
       },
-      url:{
-        type:String,
+      url: {
+        type: String,
       },
     },
-    role:{
-      type:String,
-      default:"user"
+    role: {
+      type: String,
+      default: "user",
     },
-    answer:{
-      type:String,
-      required:[true,"answer is required"]
-    }
+    answer: {
+      type: String,
+      required: [true, "answer is required"],
+    },
+    isVerified: {
+      type: Boolean,
+      default: false, // OTP verification status
+    },
+    verificationToken: { type: String }, // Store the verification token
+    tokenExpiry: { type: Date },
   },
   { timestamps: true }
 );

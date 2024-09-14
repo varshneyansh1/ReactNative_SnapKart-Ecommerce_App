@@ -3,7 +3,6 @@ import {server} from '../../store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export const login = (email, password) => async dispatch => {
   try {
-    console.log(email, password);
     dispatch({
       type: 'loginRequest',
     });
@@ -17,7 +16,7 @@ export const login = (email, password) => async dispatch => {
         },
       },
     );
-    console.log('login data', data);
+
     dispatch({
       type: 'loginSuccess',
       payload: data,
@@ -37,7 +36,7 @@ export const register = formData => async dispatch => {
       type: 'registerRequest',
     });
     // hit register api
-    const data = await axios.post(`${server}/user/register`, formData, {
+    const data = await axios.post(`${server}/user/signup`, formData, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -54,6 +53,44 @@ export const register = formData => async dispatch => {
     });
   }
 };
+// Action to send OTP
+export const otpSignup = (formData, navigation) => async dispatch => {
+  try {
+    dispatch({type: 'otpRequest'});
+    const {data} = await axios.post(`${server}/user/signup`, formData);
+    dispatch({type: 'otpSuccess', payload: data.message});
+  } catch (error) {
+    dispatch({
+      type: 'otpFail',
+      payload: error.response?.data?.message || error.message,
+    });
+  }
+};
+
+// Action to verify OTP
+export const verifyOTP = (otp, email, navigation) => async dispatch => {
+  try {
+    dispatch({ type: 'otpVerifyRequest' });
+    
+    // Send request to verify OTP
+    const { data } = await axios.post(`${server}/user/verify-otp`, { email, otp });
+
+    // If OTP verification is successful, update the state
+    dispatch({
+      type: 'otpVerifySuccess',
+      payload: data.message,
+    });
+
+    // Navigate to the login page after successful OTP verification
+   // navigation.navigate('login');
+  } catch (error) {
+    dispatch({
+      type: 'otpVerifyFail',
+      payload: error.response?.data?.message || error.message,
+    });
+  }
+};
+
 
 // get User Data
 export const getUserData = () => async dispatch => {
@@ -85,12 +122,12 @@ export const getUserData = () => async dispatch => {
   }
 };
 
-export const logout = () => async (dispatch) => {
+export const logout = () => async dispatch => {
   try {
-    dispatch({ type: 'logoutRequest' });
+    dispatch({type: 'logoutRequest'});
 
     const token = await AsyncStorage.getItem('@auth'); // Get token from storage
-    const { data } = await axios.get(`${server}/user/logout`, {
+    const {data} = await axios.get(`${server}/user/logout`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -99,7 +136,6 @@ export const logout = () => async (dispatch) => {
       type: 'logoutSuccess',
       payload: data.message,
     });
-
   } catch (error) {
     dispatch({
       type: 'logoutFail',
@@ -107,4 +143,3 @@ export const logout = () => async (dispatch) => {
     });
   }
 };
-

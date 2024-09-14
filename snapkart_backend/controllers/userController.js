@@ -1,6 +1,113 @@
 import { userModel } from "../models/userModel.js";
 import getDataUri from "../utils/features.js";
 import cloudinary from "cloudinary";
+import { sendOTP, verifyOTP } from "../services/otp.service.js";
+import crypto from "crypto"
+import { sendEmail } from "../services/emailer.service.js";
+// Register User and Send OTP
+// OTP Signup Handler
+// Generate a random token for email verification
+const generateVerificationToken = () => {
+  return crypto.randomBytes(32).toString('hex');
+};
+
+export const otpSignup = async (req, res) => {
+  const { name, email, password, phone, address, city, country, answer } = req.body;
+
+  try {
+    const existingUser = await userModel.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: "Email is already registered" });
+    }
+
+    // Generate verification token and expiry
+    const verificationToken = generateVerificationToken();
+    const tokenExpiry = Date.now() + 24 * 60 * 60 * 1000; // Token expires in 24 hours
+
+    // Create a new user with `isVerified` set to false initially
+    const newUser = new userModel({
+      name,
+      email,
+      password,
+      phone,
+      address,
+      city,
+      country,
+      answer,
+      verificationToken,
+      tokenExpiry,
+      isVerified: false,  // User is not verified initially
+    });
+
+    // Save the user to the database
+    await newUser.save();
+
+    // Send verification email
+    const verificationLink = `https://reactnative-snapkart-ecommerce-app.onrender.com/api/v1/verify-email?token=${verificationToken}&email=${email}`;
+    const emailMessage = `
+      <h1>Email Verification</h1>
+      <p>Please click the link below to verify your email:</p>
+      <a href="${verificationLink}">Verify Email</a>
+    `;
+
+    await sendEmail({
+      email,
+      subject: "Email Verification",
+      body: emailMessage,
+    });
+
+    return res.status(200).json({ message: "User registered. Verification email sent." });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+export const verifyEmail = async (req, res) => {
+  const { token, email } = req.query;
+
+  try {
+    // Find the user by email
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ error: "Invalid email or token" });
+    }
+
+    // Check if the token is valid and not expired
+    if (user.verificationToken !== token || user.tokenExpiry < Date.now()) {
+      return res.status(400).json({ error: "Token is invalid or has expired" });
+    }
+
+    // Mark the user as verified
+    user.isVerified = true;
+    user.verificationToken = undefined;  // Clear the token after successful verification
+    user.tokenExpiry = undefined;  // Clear the token expiry date
+    await user.save();
+
+    return res.status(200).json({ message: "Email verified successfully" });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+// Middleware to Check if User is Verified
+export const checkIsVerified = async (req, res, next) => {
+  const { email } = req.body;
+
+  try {
+    const user = await userModel.findOne({ email });
+    if (!user || !user.isVerified) {
+      return res.status(400).json({ error: "User is not verified. Please verify your email id " });
+    }
+    next();  // If verified, proceed to the next middleware/route handler
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+
+
+
+
 export const registerController = async (req, res) => {
   try {
     const { name, email, password, address, city, country, phone, answer } =
@@ -38,7 +145,8 @@ export const registerController = async (req, res) => {
       city,
       country,
       phone,
-      answer
+      answer,
+    
     });
     res.status(201).send({
       success: true,
@@ -57,7 +165,6 @@ export const registerController = async (req, res) => {
 
 export const loginController = async (req, res) => {
   try {
-   
     const { email, password } = req.body;
     //validation
     if (!email || !password) {
@@ -77,7 +184,7 @@ export const loginController = async (req, res) => {
     }
     //check password
     const isMatch = await user.comparePassword(password);
-    console.log(isMatch)
+    console.log(isMatch);
     if (!isMatch) {
       return res.status(500).send({
         success: false,
@@ -85,7 +192,7 @@ export const loginController = async (req, res) => {
       });
     }
     const token = user.generateToken();
-   
+
     res
       .status(200)
       .cookie("token", token, {
@@ -139,7 +246,7 @@ export const logoutController = async (req, res) => {
         expires: new Date(Date.now()), // Immediately expire the cookie
         secure: process.env.NODE_ENV === "production", // Secure in production
         httpOnly: process.env.NODE_ENV === "production", // HttpOnly in production
-        sameSite: process.env.NODE_ENV === "production" ? 'Strict' : 'Lax', // Lax in development
+        sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax", // Lax in development
       })
       .send({
         success: true,
@@ -154,7 +261,6 @@ export const logoutController = async (req, res) => {
     });
   }
 };
-
 
 // UPDATE USER PROFILE
 export const updateProfileController = async (req, res) => {

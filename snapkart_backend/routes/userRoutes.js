@@ -1,13 +1,16 @@
 import express from "express";
 import {
+  checkIsVerified,
   getUserProfileController,
   loginController,
   logoutController,
+  otpSignup,
   passwordResetController,
   registerController,
   udpatePasswordController,
   updateProfileController,
   updateProfilePicController,
+  verifyEmail,
 } from "../controllers/userController.js";
 import { isAuth } from "../middlewares/authMiddleware.js";
 import { singleUpload } from "../middlewares/multer.js";
@@ -27,7 +30,7 @@ const router = express.Router();
 // register
 router.post("/register", limiter, registerController);
 //login
-router.post("/login", limiter, loginController);
+router.post("/login", limiter,checkIsVerified, loginController);
 //profile
 router.get("/profile", isAuth, getUserProfileController);
 //logout
@@ -36,9 +39,13 @@ router.get("/logout", isAuth, logoutController);
 router.put("/profile-update", isAuth, updateProfileController);
 // updte password
 router.put("/update-password", isAuth, udpatePasswordController);
-
 //update profile pic
 router.put("/update-picture", isAuth, singleUpload, updateProfilePicController);
+
+//otp verification
+router.post("/signup", otpSignup); // Request to send OTP and save temporary user data
+router.get("/verify-email", verifyEmail); // Verify OTP and create user
+
 
 //  FORGOT PASSWORD
 router.post("/reset-password", passwordResetController);

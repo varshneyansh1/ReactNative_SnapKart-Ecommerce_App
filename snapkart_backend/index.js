@@ -14,6 +14,8 @@ import orderRoutes from "./routes/orderRoutes.js";
 import Stripe from "stripe";
 import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
 //dot env config
 dotenv.config();
 // db connection
@@ -36,6 +38,16 @@ app.use(express.json());
 app.use(cors("*"));
 app.use(cookieParser());
 app.use(mongoSanitize());
+app.use(session({
+  secret: process.env.SESSION_SECRET, // Replace with your own secret
+  resave: false,           // Don't save session if unmodified
+  saveUninitialized: false, // Save a session even if it's new and not modified
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URL,
+    collectionName: 'sessions'
+  }),
+  cookie: { secure: false, maxAge: 10 * 60 * 1000 } // Set to `true` if using HTTPS, or else `false`
+}));
 
 // route
 app.use("/api/v1/user", userRoutes);

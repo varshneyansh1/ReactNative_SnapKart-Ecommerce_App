@@ -2,29 +2,26 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import InputBox from "../../components/Form/InputBox";
 import { useDispatch } from "react-redux";
-import { register } from "../../redux/features/auth/userActions";
-import { useReduxStatehook } from "../../hooks/customHook";
-
+import { otpSignup } from "../../redux/features/auth/userActions";
 
 const Register = ({ navigation }) => {
   const dispatch = useDispatch();
-
-  const loginImage = "https://cdn3d.iconscout.com/3d/premium/thumb/login-template-6251837-5117017.png?f=webp";
-  const [email, setEamil] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [phone, setPhone] = useState("");
   const [answer, setAnswer] = useState("");
-  const [country, setCountry] = useState("india");
+  const [country, setCountry] = useState("India");
 
-  // login function
-  const handleRegister = () => {
-    // validation
-    if (!email || !password || !name || !address || !city || !phone) {
-      return alert("Please provide all fields client side");
+  const loginImage = "https://cdn3d.iconscout.com/3d/premium/thumb/login-template-6251837-5117017.png?f=webp";
+
+  const handleRegister = async () => {
+    if (!email || !password || !name || !address || !city || !phone || !answer) {
+      return alert("Please provide all required fields");
     }
+
     const formData = {
       email,
       password,
@@ -33,78 +30,80 @@ const Register = ({ navigation }) => {
       city,
       phone,
       answer,
-      country: "India",
+      country,
     };
-    dispatch(register(formData));
-    // navigation.navigate("/login");
+
+    // Dispatch the OTP Signup Action
+    dispatch(otpSignup(formData, navigation));
+
+    // Navigate to OTP Verification Screen with the registered email
+    navigation.navigate("OTPVerification", { email });
   };
-  const loading = useReduxStatehook(navigation, "login");
+
   return (
     <View style={styles.container}>
       <Image source={{ uri: loginImage }} style={styles.image} />
-
       <InputBox
-        placeholder={"Enter You Name"}
+        placeholder="Enter Your Name"
         value={name}
         setValue={setName}
-        autoComplete={"name"}
+        autoComplete="name"
       />
       <InputBox
-        placeholder={"Enter You Email"}
+        placeholder="Enter Your Email"
         value={email}
-        setValue={setEamil}
-        autoComplete={"email"}
+        setValue={setEmail}
+        autoComplete="email"
       />
       <InputBox
+        placeholder="Enter Your Password"
         value={password}
         setValue={setPassword}
-        placeholder={"Enter You Password"}
-        secureTextEntry={true}
+        secureTextEntry
       />
       <InputBox
-        placeholder={"Enter You address"}
+        placeholder="Enter Your Address"
         value={address}
         setValue={setAddress}
-        autoComplete={"address-line1"}
+        autoComplete="address-line1"
       />
       <InputBox
-        placeholder={"Enter You city"}
+        placeholder="Enter Your City"
         value={city}
         setValue={setCity}
-        autoComplete={"country"}
+        autoComplete="address-level2"
       />
       <InputBox
-        placeholder={"Enter You contact no"}
+        placeholder="Enter Your Phone"
         value={phone}
         setValue={setPhone}
-        autoComplete={"name"}
+        keyboardType="phone-pad"
       />
       <InputBox
-        placeholder={"Enter Your Crush Name"}
+        placeholder="Enter Your Answer"
         value={answer}
         setValue={setAnswer}
-        autoComplete={"name"}
       />
       <View style={styles.btnContainer}>
-        <TouchableOpacity style={styles.loginBtn} onPress={handleRegister}>
-          <Text style={styles.loginBtnText}>Register</Text>
+        <TouchableOpacity style={styles.registerBtn} onPress={handleRegister}>
+          <Text style={styles.registerBtnText}>Register</Text>
         </TouchableOpacity>
-        <Text style={{color:"black"}}>
-          Alredy a user please ?{"  "}
+        <Text style={{ color: "black" }}>
+          Already a user?{" "}
           <Text
             style={styles.link}
             onPress={() => navigation.navigate("login")}
           >
-            login !
+            Login!
           </Text>
         </Text>
       </View>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
-    // alignItems: "center",
     justifyContent: "center",
     height: "100%",
   },
@@ -117,16 +116,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  loginBtn: {
-    backgroundColor: "#000000",
+  registerBtn: {
+    backgroundColor: "#000",
     width: "80%",
     justifyContent: "center",
     height: 40,
     borderRadius: 10,
     marginVertical: 20,
   },
-  loginBtnText: {
-    color: "#ffffff",
+  registerBtnText: {
+    color: "#fff",
     textAlign: "center",
     textTransform: "uppercase",
     fontWeight: "500",
@@ -136,4 +135,5 @@ const styles = StyleSheet.create({
     color: "red",
   },
 });
+
 export default Register;

@@ -16,10 +16,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import PaymentPage from './screens/PaymentPage';
 import CatProducts from './components/Products/CatProduct.js';
 import OrderDetails from './screens/Account/OrderDetails.js';
+import OTPScreen from './screens/auth/OTPScreen.js';
 
 const Stack = createNativeStackNavigator();
 const Main = () => {
   const [isAuth, setIsAuth] = useState(null);
+
   //get user
   useEffect(() => {
     const getUserLocalData = async () => {
@@ -88,7 +90,7 @@ const Main = () => {
           options={{headerShown: false}}
         />
 
-        {!isAuth && (
+        { !isAuth  && (
           <>
             <Stack.Screen
               name="login"
@@ -98,6 +100,11 @@ const Main = () => {
             <Stack.Screen
               name="register"
               component={Register}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="OTPVerification"
+              component={OTPScreen}
               options={{headerShown: false}}
             />
           </>

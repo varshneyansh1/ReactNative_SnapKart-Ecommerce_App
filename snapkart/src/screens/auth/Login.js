@@ -13,8 +13,10 @@ import InputBox from '../../components/Form/InputBox';
 import {login} from '../../redux/features/auth/userActions';
 import {useDispatch} from 'react-redux';
 import {useReduxStatehook} from '../../hooks/customHook';
+import {useNavigation} from '@react-navigation/native';
 
 const Login = ({navigation}) => {
+ 
   const loginImage =
     'https://cdn3d.iconscout.com/3d/premium/thumb/login-template-6251837-5117017.png?f=webp';
   const [email, setEamil] = useState('');
@@ -22,7 +24,7 @@ const Login = ({navigation}) => {
   // hooks
   const dispatch = useDispatch();
   // global state
-  const loading = useReduxStatehook(navigation, 'home');
+     const loading = useReduxStatehook(navigation, 'home');
 
   // login function
   const handleLogin = () => {
@@ -30,12 +32,13 @@ const Login = ({navigation}) => {
       return alert('Please add email or password');
     }
     dispatch(login(email, password));
+ 
   };
 
   return (
     <View style={styles.container}>
       <Image source={{uri: loginImage}} style={styles.image} />
-      {loading && <ActivityIndicator size="small" color="#0000ff" />}
+
       <InputBox
         placeholder={'Enter You Email'}
         value={email}
