@@ -52,6 +52,7 @@ export const createOrderController = async (req, res) => {
 
 // GET ALL ORDERS - MY ORDERS
 export const getMyOrdersController = async (req, res) => {
+  console.log("-----",req.user)
   try {
     // Ensure user ID is available
     if (!req.user || !req.user._id) {

@@ -4,7 +4,6 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
-  ActivityIndicator,
 } from 'react-native';
 import React, {useState} from 'react';
 import InputBox from '../../components/Form/InputBox';
@@ -12,8 +11,7 @@ import InputBox from '../../components/Form/InputBox';
 //redux hooks
 import {login} from '../../redux/features/auth/userActions';
 import {useDispatch} from 'react-redux';
-import {useReduxStatehook} from '../../hooks/customHook';
-import {useNavigation} from '@react-navigation/native';
+import { useReduxStateHook } from '../../hooks/customHook';
 
 const Login = ({navigation}) => {
  
@@ -24,7 +22,7 @@ const Login = ({navigation}) => {
   // hooks
   const dispatch = useDispatch();
   // global state
-     const loading = useReduxStatehook(navigation, 'home');
+  const loading = useReduxStateHook(navigation, 'home');
 
   // login function
   const handleLogin = () => {
@@ -38,7 +36,7 @@ const Login = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Image source={{uri: loginImage}} style={styles.image} />
-
+      {loading && <Text></Text>}
       <InputBox
         placeholder={'Enter You Email'}
         value={email}

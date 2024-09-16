@@ -17,6 +17,7 @@ import PaymentPage from './screens/PaymentPage';
 import CatProducts from './components/Products/CatProduct.js';
 import OrderDetails from './screens/Account/OrderDetails.js';
 import OTPScreen from './screens/auth/OTPScreen.js';
+import SearchResults from './components/Products/SearchProducts.js';
 
 const Stack = createNativeStackNavigator();
 const Main = () => {
@@ -87,6 +88,11 @@ const Main = () => {
         <Stack.Screen
           name="catProducts"
           component={CatProducts}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="SearchResults"
+          component={SearchResults}
           options={{headerShown: false}}
         />
 

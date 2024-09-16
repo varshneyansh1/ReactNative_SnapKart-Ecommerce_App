@@ -1,5 +1,5 @@
 import productModel from "../models/productModel.js";
-
+import mongoose from "mongoose";
 import cloudinary from "cloudinary";
 import { getDataUri } from "./../utils/features.js";
 import categoryModel from "../models/categoryModel.js";
@@ -53,6 +53,7 @@ export const getTopProductsController = async (req, res) => {
 };
 
 // GET SINGLE PRODUCT
+// Fetch single product by ID
 export const getSingleProductController = async (req, res) => {
   try {
     // get product id
@@ -85,6 +86,7 @@ export const getSingleProductController = async (req, res) => {
     });
   }
 };
+
 // create product
 export const createProductController = async (req, res) => {
   try {
@@ -189,29 +191,38 @@ export const getProductsByCategoryController = async (req, res) => {
 };
 // search product
 
-// Backend Controller to Search Products
+/// Backend Controller to Search Products
 export const searchProductsController = async (req, res) => {
   try {
-    const results = await productModel.aggregate([
-      {
-        $search: {
-          index: "productSearch", // Ensure this index is created in your MongoDB Atlas
-          text: {
-            query: req.params.key, // search query from the user
-            path: {
-              wildcard: "*", // Search across all fields
-            },
-          },
-        },
-      },
-    ]);
+    const keyword = req.query.keyword
+      ? {
+          $or: [
+            { name: { $regex: req.query.keyword, $options: "i" } },
+            { description: { $regex: req.query.keyword, $options: "i" } },
+            { category: { $regex: req.query.keyword, $options: "i" } },
+          ],
+        }
+      : {};
 
-    res.status(200).send(results);
-  } catch (err) {
+    const products = await products.find(keyword);
+
+    if (products.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No products found for the search term",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      products,
+    });
+  } catch (error) {
+    console.error(error);
     res.status(500).json({
       success: false,
-      message: "Error searching for products",
-      error: err.message,
+      message: "Error fetching product",
+      error: error.message,
     });
   }
 };

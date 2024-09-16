@@ -44,10 +44,10 @@ const productSchema = new mongoose.Schema(
     },
     userQuantity: {
       type: Number,
-      default:1
+      default: 1,
     },
     category: {
-      type:String,
+      type: String,
     },
     images: [
       {
@@ -67,5 +67,7 @@ const productSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
- const productModel = mongoose.model("Products", productSchema);
+// Create a text index on the fields in the product schema
+productSchema.index({ name: "text", description: "text", category: "text" });
+const productModel = mongoose.model("Products", productSchema);
 export default productModel;

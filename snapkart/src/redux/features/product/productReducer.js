@@ -7,7 +7,6 @@ const initialState = {
   productDetail: null,
   error: null,
   searchResults: [],
-
 };
 
 export const productReducer = createReducer(initialState, builder => {
@@ -48,15 +47,13 @@ export const productReducer = createReducer(initialState, builder => {
     state.error = action.payload;
   });
 
-  // builder.addCase('searchProductsRequest', (state) => {
-  //   state.loading = true;
-  // });
-  // builder.addCase('searchProductsSuccess', (state, action) => {
-  //   state.loading = false;
-  //   state.searchResults = action.payload;
-  // });
-  // builder.addCase('searchProductsFail', (state, action) => {
-  //   state.loading = false;
-  //   state.error = action.payload;
-  // });
+  // Filter products locally by search term and category
+  builder.addCase('filterProductsBySearch', (state, action) => {
+    const searchKey = action.payload.toLowerCase();
+    state.searchResults = state.products.filter(
+      product =>
+        product.name.toLowerCase().includes(searchKey) ||
+        product.category.toLowerCase().includes(searchKey),
+    );
+  });
 });

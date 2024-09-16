@@ -43,8 +43,8 @@ const MyOrders = () => {
           <ScrollView>
             {orders?.map(order => (
               <TouchableOpacity
-                key={order._id}
-                onPress={() => handleOrderClick(order._id)}>
+                key={order?._id}
+                onPress={() => handleOrderClick(order?._id)}>
                 <OrderItem order={order} />
               </TouchableOpacity>
             ))}

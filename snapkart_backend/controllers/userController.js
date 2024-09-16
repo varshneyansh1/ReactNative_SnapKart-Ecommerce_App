@@ -12,7 +12,7 @@ const generateVerificationToken = () => {
 };
 
 export const otpSignup = async (req, res) => {
-  const { name, email, password, phone, address, city, country, answer } = req.body;
+  const { name, email, password, phone, address, city, country } = req.body;
 
   try {
     const existingUser = await userModel.findOne({ email });
@@ -33,7 +33,6 @@ export const otpSignup = async (req, res) => {
       address,
       city,
       country,
-      answer,
       verificationToken,
       tokenExpiry,
       isVerified: false,  // User is not verified initially
@@ -46,7 +45,7 @@ export const otpSignup = async (req, res) => {
     const verificationLink = `https://reactnative-snapkart-ecommerce-app.onrender.com/api/v1/user/verify-email?token=${verificationToken}&email=${email}`;
     const emailMessage = `
       <h1>Email Verification</h1>
-      <p>Please click the link below to verify your email:</p>
+      <p> Hi ${name} Please click the link below to verify your email:</p>
       <a href="${verificationLink}">Verify Email</a>
     `;
 
@@ -56,7 +55,7 @@ export const otpSignup = async (req, res) => {
       body: emailMessage,
     });
 
-    return res.status(200).json({ message: "User registered. Verification email sent." });
+    return res.status(200).json({ success: true, message: "Verification email sent." });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -83,7 +82,7 @@ export const verifyEmail = async (req, res) => {
     user.tokenExpiry = undefined;  // Clear the token expiry date
     await user.save();
 
-    return res.status(200).json({ message: "Email verified successfully" });
+    return res.status(200).json({ success: true, message: "Email verified successfully" });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -110,7 +109,7 @@ export const checkIsVerified = async (req, res, next) => {
 
 export const registerController = async (req, res) => {
   try {
-    const { name, email, password, address, city, country, phone, answer } =
+    const { name, email, password, address, city, country, phone} =
       req.body;
     // validation
     if (
@@ -120,8 +119,7 @@ export const registerController = async (req, res) => {
       !password ||
       !address ||
       !country ||
-      !phone ||
-      !answer
+      !phone
     ) {
       return res.status(500).send({
         success: false,
@@ -145,7 +143,6 @@ export const registerController = async (req, res) => {
       city,
       country,
       phone,
-      answer,
     
     });
     res.status(201).send({

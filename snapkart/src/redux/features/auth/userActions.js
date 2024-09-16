@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {server} from '../../store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Alert} from 'react-native';
 export const login = (email, password) => async dispatch => {
   try {
     dispatch({
@@ -23,6 +24,7 @@ export const login = (email, password) => async dispatch => {
     });
     await AsyncStorage.setItem('@auth', data?.token);
   } catch (error) {
+    console.log(error);
     dispatch({
       type: 'loginFail',
       payload: error.message,
@@ -30,67 +32,49 @@ export const login = (email, password) => async dispatch => {
   }
 };
 // register action
-export const register = formData => async dispatch => {
+// export const register = formData => async dispatch => {
+//   try {
+//     dispatch({
+//       type: 'registerRequest',
+//     });
+//     // hit register api
+//     const data = await axios.post(`${server}/user/signup`, formData, {
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//     });
+//     dispatch({
+//       type: 'registerSucess',
+//       payload: data.message,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     dispatch({
+//       type: 'registerFail',
+//       payload: error.message,
+//     });
+//   }
+// };
+// Action to send OTP
+export const otpSignup = (formData,navigation) => async dispatch => {
   try {
-    dispatch({
-      type: 'registerRequest',
-    });
-    // hit register api
-    const data = await axios.post(`${server}/user/signup`, formData, {
+    dispatch({type: 'registerRequest'});
+    const {data} = await axios.post(`${server}/user/signup`, formData, {
       headers: {
         'Content-Type': 'application/json',
       },
     });
-    dispatch({
-      type: 'registerSucess',
-      payload: data.message,
-    });
+    dispatch({type: 'registerSuccess', payload: data.message});
+    Alert.alert(data.message);
+    navigation.navigate('login');
   } catch (error) {
     console.log(error);
     dispatch({
       type: 'registerFail',
-      payload: error.message,
-    });
-  }
-};
-// Action to send OTP
-export const otpSignup = (formData, navigation) => async dispatch => {
-  try {
-    dispatch({type: 'otpRequest'});
-    const {data} = await axios.post(`${server}/user/signup`, formData);
-    dispatch({type: 'otpSuccess', payload: data.message});
-  } catch (error) {
-    dispatch({
-      type: 'otpFail',
       payload: error.response?.data?.message || error.message,
     });
   }
 };
-
-// Action to verify OTP
-export const verifyOTP = (otp, email, navigation) => async dispatch => {
-  try {
-    dispatch({ type: 'otpVerifyRequest' });
-    
-    // Send request to verify OTP
-    const { data } = await axios.post(`${server}/user/verify-otp`, { email, otp });
-
-    // If OTP verification is successful, update the state
-    dispatch({
-      type: 'otpVerifySuccess',
-      payload: data.message,
-    });
-
-    // Navigate to the login page after successful OTP verification
-   // navigation.navigate('login');
-  } catch (error) {
-    dispatch({
-      type: 'otpVerifyFail',
-      payload: error.response?.data?.message || error.message,
-    });
-  }
-};
-
 
 // get User Data
 export const getUserData = () => async dispatch => {
@@ -115,6 +99,7 @@ export const getUserData = () => async dispatch => {
       payload: data?.user,
     });
   } catch (error) {
+    console.log(error);
     dispatch({
       type: 'getUserDataFail',
       payload: error.response?.data?.message || error.message,

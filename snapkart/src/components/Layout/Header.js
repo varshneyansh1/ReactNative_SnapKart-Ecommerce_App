@@ -5,14 +5,22 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {useDispatch} from 'react-redux';
+import {filterProductsBySearch} from '../../redux/features/product/productActions';
+import {useNavigation} from '@react-navigation/native';
 const Header = () => {
   const [searchText, setSearchText] = useState('');
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
   // fxn for search
   const handleSearch = () => {
-    console.log(searchText);
-    setSearchText('')
+    if (searchText.trim() !== '') {
+      dispatch(filterProductsBySearch(searchText));
+      setSearchText('');
+      navigation.navigate('SearchResults'); // Navigate to the search results screen
+    }
   };
   return (
     <View style={{height: 90, backgroundColor: '#ccae62'}}>
@@ -20,12 +28,15 @@ const Header = () => {
         <TextInput
           style={styles.inputBox}
           value={searchText}
-          onChangeText={(text) => setSearchText(text)}
+          onSubmitEditing={handleSearch}  // Trigger search on keyboard "enter"
+          returnKeyType="search"  // Change the keyboard return key to a search icon
+          onChangeText={text => setSearchText(text)}
         />
         <TouchableOpacity>
-          <FontAwesome name="search" 
-          style={styles.icon}
-          onPress={handleSearch}
+          <FontAwesome
+            name="search"
+            style={styles.icon}
+            onPress={handleSearch}
           />
         </TouchableOpacity>
       </View>

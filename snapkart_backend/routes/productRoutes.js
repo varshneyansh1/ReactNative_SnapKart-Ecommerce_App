@@ -31,7 +31,7 @@ router.get("/top", getTopProductsController);
 // GET SINGLE PRODUCTS
 router.get("/:id", getSingleProductController);
 // search product 
-router.get('/search/:key', searchProductsController);
+router.get('/search', searchProductsController);
 
 // CREATE PRODUCT
 router.post("/create", singleUpload, createProductController);

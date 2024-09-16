@@ -45,10 +45,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "user",
     },
-    answer: {
-      type: String,
-      required: [true, "answer is required"],
-    },
     isVerified: {
       type: Boolean,
       default: false, // OTP verification status

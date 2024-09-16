@@ -61,21 +61,10 @@ export const getProductsByCategory = (categoryName) => async dispatch => {
   }
 };  
 
-
-// Action to search products by name
-// export const searchProducts = (searchKey) => async (dispatch) => {
-//   try {
-//     dispatch({ type: 'searchProductsRequest' });
-
-//     const { data } = await axios.get(`${server}/product/search/${searchKey}`);
-//     dispatch({
-//       type: 'searchProductsSuccess',
-//       payload: data,
-//     });
-//   } catch (error) {
-//     dispatch({
-//       type: 'searchProductsFail',
-//       payload: error.response.data.message,
-//     });
-//   }
-// };
+// Action to filter products
+export const filterProductsBySearch = searchKey => dispatch => {
+  dispatch({
+    type: 'filterProductsBySearch',
+    payload: searchKey,
+  });
+};

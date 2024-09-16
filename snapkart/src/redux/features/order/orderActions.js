@@ -174,7 +174,7 @@ export const getMyOrders = () => async dispatch => {
     });
     dispatch({
       type: 'getMyOrdersSuccess',
-      payload: data.orders,
+      payload: data?.orders,
     });
   } catch (error) {
     dispatch({

@@ -1,15 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 
-export const userReducer = createReducer(
-  {
-    token: null,
-    user: null,
-    isAuth: false,
-    loading: false,
-    error: null,
-    message: null,
-  },
-  builder => {
+export const userReducer = createReducer({ token: null }, (builder) => {
     // login case
     builder.addCase('loginRequest', (state, action) => {
       state.loading = true;
@@ -46,45 +37,19 @@ export const userReducer = createReducer(
       state.error = action.payload;
     });
 
-    // Register
-    builder.addCase('registerRequest', (state, action) => {
-      state.loading = true;
-    });
-    builder.addCase('registerSuccess', (state, action) => {
-      state.loading = false;
-      state.isAuth = true;
-      state.message = action.payload;
-    });
-    builder.addCase('registerFail', (state, action) => {
-      state.isAuth = false;
-      state.error = action.payload;
-    });
-    // OTP Signup cases
-    builder.addCase('otpRequest', state => {
-      state.loading = true;
-    });
-    builder.addCase('otpSuccess', (state, action) => {
-      state.loading = false;
-      state.message = action.payload;
-    });
-    builder.addCase('otpFail', (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    });
-
-    // OTP Verification cases
-    builder.addCase('otpVerifyRequest', (state) => {
-      state.loading = true;
-    });
-    builder.addCase('otpVerifySuccess', (state, action) => {
-      state.loading = false;
-      state.isAuth = true;
-      state.message = action.payload;
-    });
-    builder.addCase('otpVerifyFail', (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    });
+   //REGISTER
+  builder.addCase("registerRequest", (state, action) => {
+    state.loading = true;
+  });
+  builder.addCase("registerSucess", (state, action) => {
+    state.loading = false;
+    // state.isAuth = true;
+    state.message = action.payload;
+  });
+  builder.addCase("registerFail", (state, action) => {
+    state.isAuth = false;
+    state.error = action.payload;
+  });
 
     // logout
     builder.addCase('logoutRequest', (state, action) => {

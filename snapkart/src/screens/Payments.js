@@ -46,9 +46,10 @@ const PaymentComponent = ({totalAmount, clientSecret, formData}) => {
 
       // Remove cart items from AsyncStorage
       await AsyncStorage.removeItem('cart');
-
+      dispatch(getMyOrders());
       Alert.alert('Payment complete, thank you!');
-      navigation.navigate('home');
+      
+    //  navigation.navigate('myorders');
     } catch (err) {
       console.error('Payment Error:', err);
       Alert.alert('Something went wrong, try again later!');

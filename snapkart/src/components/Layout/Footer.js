@@ -2,17 +2,17 @@ import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import React from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useRoute, useNavigation} from '@react-navigation/native';
-import {useReduxStatehook} from '../../hooks/customHook';
 import {logout} from '../../redux/features/auth/userActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
+import { useReduxStateHook } from '../../hooks/customHook';
 
 const Footer = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  const loading = useReduxStatehook(navigation, 'login');
+  const loading = useReduxStateHook(navigation, 'login');
   return (
     <View style={styles.container}>
       <TouchableOpacity
