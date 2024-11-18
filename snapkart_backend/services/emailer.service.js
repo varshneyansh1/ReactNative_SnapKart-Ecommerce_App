@@ -6,16 +6,16 @@ export const sendEmail = async (params) => {
   const transporter = nodemailer.createTransport({
     service: "Gmail",
     auth: {
-      user: "anshvar2002@gmail.com",
-      pass: "khaq bwng oity noyn",  // Use environment variables for security
+      user: process.env.USER_NAME,
+      pass: process.env.USER_PASS, // Use environment variables for security
     },
   });
 
   const mailOptions = {
-    from: 'anshvar2002@gmail.com',
+    from: process.env.USER_NAME,
     to: params.email,
     subject: params.subject,
-    html: params.body,  // Using HTML to send clickable links
+    html: params.body, // Using HTML to send clickable links
   };
 
   await transporter.sendMail(mailOptions);
