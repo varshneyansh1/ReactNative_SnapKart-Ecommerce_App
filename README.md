@@ -26,20 +26,21 @@
 
 ## 📸 Screenshots
 
-| **Screen**              | **Preview**                                   |
-|--------------------------|-----------------------------------------------|
-| **Login**               | <img src="assets/1.jpg" height="250">         |
-| **Register**            | <img src="assets/2.jpg" height="250">         |
-| **Home Screen**         | <img src="assets/3.jpg" height="250">         |
-| **Product Section**     | <img src="assets/4.jpg" height="250">         |
-| **Product Details**     | <img src="assets/5.jpg" height="250">         |
-| **Notifications**       | <img src="assets/6.jpg" height="250">         |
-| **Cart**                | <img src="assets/7.jpg" height="250">         |
-| **Payment Method**      | <img src="assets/8.jpg" height="250">         |
-| **Order Details**       | <img src="assets/9.jpg" height="250">         |
-| **Stripe Integration**  | <img src="assets/10.jpg" height="250">        |
+<div align="center">
 
----
+### Login, Register, and Home Screen
+<img src="assets/1.jpg" height="350"> <img src="assets/2.jpg" height="350"> <img src="assets/3.jpg" height="350">
+
+### Product Section, Product Details, and Notifications
+<img src="assets/4.jpg" height="350"> <img src="assets/5.jpg" height="350"> <img src="assets/6.jpg" height="350">
+
+### Cart, Payment Method, and Order Details
+<img src="assets/7.jpg" height="350"> <img src="assets/8.jpg" height="350"> <img src="assets/9.jpg" height="350">
+
+### Stripe Integration
+<img src="assets/10.jpg" height="350">
+
+</div>
 
 ## 🎯 Project Highlights
 
